@@ -2,7 +2,7 @@
 
 Un plugin de compresor de audio básico desarrollado en C++ utilizando el framework JUCE. Este procesador reduce el rango dinámico de la señal de audio entrante basándose en los parámetros estándar de compresión dinámica.
 
-
+  <img src="https://github.com/user-attachments/assets/d2e501cd-50b5-4d1d-9035-aaf207ea4c1c" width="600">
 
 ## 🎚️ Características y Controles
 
