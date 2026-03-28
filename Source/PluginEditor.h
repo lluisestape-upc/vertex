@@ -3,8 +3,8 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
+// 1. Ya NO heredamos de juce::Slider::Listener, el APVTS se encarga
 class BasicCompressorAudioProcessorEditor : public juce::AudioProcessorEditor,
-    public juce::Slider::Listener,
     public juce::Timer
 {
 public:
@@ -14,8 +14,6 @@ public:
     void paint(juce::Graphics&) override;
     void resized() override;
 
-    // Funciones requeridas por Listener y Timer
-    void sliderValueChanged(juce::Slider* slider) override;
     void timerCallback() override;
 
 private:
@@ -25,6 +23,16 @@ private:
     juce::Slider gainSlider;
     juce::Slider thresholdSlider, ratioSlider, attackSlider, releaseSlider;
     juce::Label thresholdLabel, ratioLabel, attackLabel, releaseLabel;
+
+    // --- CONECTORES APVTS (La magia para que DAWs y Sliders se sincronicen) ---
+    // Usamos 'using' para no escribir el prefijo gigante cada vez y evitar tu error anterior
+    using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
+
+    std::unique_ptr<SliderAttachment> gainAttach;
+    std::unique_ptr<SliderAttachment> threshAttach;
+    std::unique_ptr<SliderAttachment> ratioAttach;
+    std::unique_ptr<SliderAttachment> attackAttach;
+    std::unique_ptr<SliderAttachment> releaseAttach;
 
     // Clase interna para la gráfica del compresor
     class CompressorDisplay : public juce::Component
@@ -52,7 +60,6 @@ private:
         float levelDb = -60.0f;
     };
 
-    // Instancias de nuestras clases visuales
     CompressorDisplay compressorDisplay;
     LevelMeter inputLevelMeter;
     LevelMeter outputLevelMeter;

@@ -120,6 +120,9 @@ bool BasicCompressorAudioProcessor::hasEditor() const { return true; }
 juce::AudioProcessorEditor* BasicCompressorAudioProcessor::createEditor() { return new BasicCompressorAudioProcessorEditor(*this); }
 
 // GUARDAR Y CARGAR DEL DAW
+// ==============================================================================
+// GUARDAR EL ESTADO (Cuando guardas el proyecto en Ableton/FL Studio)
+// GUARDAR EL ESTADO (Cuando guardas el proyecto)
 void BasicCompressorAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
 {
 	auto state = apvts.copyState();
@@ -127,6 +130,7 @@ void BasicCompressorAudioProcessor::getStateInformation(juce::MemoryBlock& destD
 	copyXmlToBinary(*xml, destData);
 }
 
+// CARGAR EL ESTADO (Cuando abres el proyecto)
 void BasicCompressorAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 {
 	std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));

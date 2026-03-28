@@ -9,6 +9,13 @@ public:
 	BasicCompressorAudioProcessor();
 	~BasicCompressorAudioProcessor() override;
 
+	// Tus variables de memoria (con los valores por defecto)
+	float volumeDb = 0.0f;
+	float threshValue = -20.0f;
+	float ratioValue = 2.0f;
+	float attackValue = 10.0f;
+	float releaseValue = 100.0f;
+
 	void prepareToPlay(double sampleRate, int samplesPerBlock) override;
 	void releaseResources() override;
 	bool isBusesLayoutSupported(const BusesLayout& layouts) const override;
@@ -37,7 +44,6 @@ public:
 	float getCurrentInputLevelDb() const { return currentInputLevelDb; }
 	float getCurrentOutputLevelDb() const { return currentOutputLevelDb; }
 
-	float volumeDb = 0.0f;
 	juce::dsp::Compressor<float> compressor;
 
 	// Nuestro APVTS y la función que define los parámetros

@@ -6,77 +6,52 @@ BasicCompressorAudioProcessorEditor::BasicCompressorAudioProcessorEditor(BasicCo
 {
 	setSize(620, 400);
 
-	// Configuración del Slider de Ganancia
+	// --- Estilos ---
 	gainSlider.setSliderStyle(juce::Slider::LinearVertical);
-	gainSlider.setRange(-50.0f, 10.0f);
-	gainSlider.setSkewFactorFromMidPoint(-10.0f);
-	gainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 100, 25);
-	gainSlider.setValue(0.0f);
-	gainSlider.addListener(this);
-	addAndMakeVisible(gainSlider);
+	gainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 100, 25); 
+	gainSlider.setNumDecimalPlacesToDisplay(0);
 
-	// Configuración de Textos (Labels)
-	thresholdLabel.setText("Threshold", juce::dontSendNotification);
-	ratioLabel.setText("Ratio", juce::dontSendNotification);
-	attackLabel.setText("Attack", juce::dontSendNotification);
-	releaseLabel.setText("Release", juce::dontSendNotification);
-
-	// Centramos los textos de las etiquetas
-	thresholdLabel.setJustificationType(juce::Justification::centred);
-	ratioLabel.setJustificationType(juce::Justification::centred);
-	attackLabel.setJustificationType(juce::Justification::centred);
-	releaseLabel.setJustificationType(juce::Justification::centred);
-
-	addAndMakeVisible(thresholdLabel);
-	addAndMakeVisible(ratioLabel);
-	addAndMakeVisible(attackLabel);
-	addAndMakeVisible(releaseLabel);
-
-	// Configuración de los Knobs (Rotary Sliders)
 	thresholdSlider.setSliderStyle(juce::Slider::Rotary);
 	ratioSlider.setSliderStyle(juce::Slider::Rotary);
 	attackSlider.setSliderStyle(juce::Slider::Rotary);
 	releaseSlider.setSliderStyle(juce::Slider::Rotary);
 
-	thresholdSlider.setRange(-60.0f, 0.0f);
-	thresholdSlider.setValue(-20.0f);
-	ratioSlider.setRange(1.0f, 10.0f);
-	ratioSlider.setValue(2.0f);
-	attackSlider.setRange(0.1f, 100.0f);
-	attackSlider.setValue(10.0f);
-	releaseSlider.setRange(10.0f, 500.0f);
-	releaseSlider.setValue(100.0f);
+	thresholdSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20); 
+	ratioSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);     
+	attackSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);    
+	releaseSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);   
 
-	gainSlider.setNumDecimalPlacesToDisplay(0);
 	thresholdSlider.setNumDecimalPlacesToDisplay(0);
 	ratioSlider.setNumDecimalPlacesToDisplay(0);
+	attackSlider.setNumDecimalPlacesToDisplay(2);
 	releaseSlider.setNumDecimalPlacesToDisplay(0);
 
-	// OJO con el Attack: como tu rango mínimo es 0.1, si le quitas todos los decimales 
-	// se mostrará como "0". Te recomiendo dejarle al menos 1 decimal.
-	attackSlider.setNumDecimalPlacesToDisplay(2);
+	// --- Labels ---
+	thresholdLabel.setText("Threshold", juce::dontSendNotification);
+	ratioLabel.setText("Ratio", juce::dontSendNotification);
+	attackLabel.setText("Attack", juce::dontSendNotification);
+	releaseLabel.setText("Release", juce::dontSendNotification);
 
-	thresholdSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
-	ratioSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
-	attackSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
-	releaseSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
+	thresholdLabel.setJustificationType(juce::Justification::centred);
+	ratioLabel.setJustificationType(juce::Justification::centred);
+	attackLabel.setJustificationType(juce::Justification::centred);
+	releaseLabel.setJustificationType(juce::Justification::centred);
 
-	thresholdSlider.addListener(this);
-	ratioSlider.addListener(this);
-	attackSlider.addListener(this);
-	releaseSlider.addListener(this);
-
-	addAndMakeVisible(thresholdSlider);
-	addAndMakeVisible(ratioSlider);
-	addAndMakeVisible(attackSlider);
-	addAndMakeVisible(releaseSlider);
-
-	// Gráfica y Medidores
+	addAndMakeVisible(gainSlider);
+	addAndMakeVisible(thresholdLabel); addAndMakeVisible(thresholdSlider);
+	addAndMakeVisible(ratioLabel);     addAndMakeVisible(ratioSlider);
+	addAndMakeVisible(attackLabel);    addAndMakeVisible(attackSlider);
+	addAndMakeVisible(releaseLabel);   addAndMakeVisible(releaseSlider);
 	addAndMakeVisible(compressorDisplay);
 	addAndMakeVisible(inputLevelMeter);
 	addAndMakeVisible(outputLevelMeter);
 
-	// Iniciamos el timer a 30 FPS para los medidores
+	gainAttach = std::make_unique<SliderAttachment>(audioProcessor.apvts, "gain", gainSlider);
+	threshAttach = std::make_unique<SliderAttachment>(audioProcessor.apvts, "threshold", thresholdSlider);
+	ratioAttach = std::make_unique<SliderAttachment>(audioProcessor.apvts, "ratio", ratioSlider);
+	attackAttach = std::make_unique<SliderAttachment>(audioProcessor.apvts, "attack", attackSlider);
+	releaseAttach = std::make_unique<SliderAttachment>(audioProcessor.apvts, "release", releaseSlider);
+
 	startTimerHz(30);
 }
 
@@ -96,7 +71,6 @@ void BasicCompressorAudioProcessorEditor::resized()
 	int startY = 35;
 	int verticalSpacing = 90;
 
-	// Etiquetas centradas encima de los knobs usando el mismo ancho y posición X
 	thresholdLabel.setBounds(startX, startY - 20, knobSize, 20);
 	thresholdSlider.setBounds(startX, startY, knobSize, knobSize);
 
@@ -114,31 +88,17 @@ void BasicCompressorAudioProcessorEditor::resized()
 	outputLevelMeter.setBounds(570, 50, 20, 280);
 }
 
-void BasicCompressorAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)
-{
-	if (slider == &gainSlider)
-		audioProcessor.volumeDb = gainSlider.getValue();
-	else if (slider == &thresholdSlider)
-		audioProcessor.compressor.setThreshold(thresholdSlider.getValue());
-	else if (slider == &ratioSlider)
-		audioProcessor.compressor.setRatio(ratioSlider.getValue());
-	else if (slider == &attackSlider)
-		audioProcessor.compressor.setAttack(attackSlider.getValue());
-	else if (slider == &releaseSlider)
-		audioProcessor.compressor.setRelease(releaseSlider.getValue());
-
-	// Actualizamos la curva en tiempo real
-	compressorDisplay.setParameters(thresholdSlider.getValue(), ratioSlider.getValue());
-}
-
 void BasicCompressorAudioProcessorEditor::timerCallback()
 {
 	inputLevelMeter.setLevel(audioProcessor.getCurrentInputLevelDb());
 	outputLevelMeter.setLevel(audioProcessor.getCurrentOutputLevelDb());
+
+	// Al quitar el sliderValueChanged, actualizamos la gráfica directamente aquí
+	compressorDisplay.setParameters(thresholdSlider.getValue(), ratioSlider.getValue());
 }
 
 // ==============================================================================
-// Dibujo de la curva del compresor
+// (Pega aquí debajo el código idéntico que tenías para dibujar tu gráfica y Vúmetros)
 // ==============================================================================
 void BasicCompressorAudioProcessorEditor::CompressorDisplay::paint(juce::Graphics& g)
 {
@@ -183,9 +143,6 @@ void BasicCompressorAudioProcessorEditor::CompressorDisplay::paint(juce::Graphic
 	g.strokePath(transferPath, juce::PathStrokeType(2.0f));
 }
 
-// ==============================================================================
-// Dibujo de los Vúmetros
-// ==============================================================================
 void BasicCompressorAudioProcessorEditor::LevelMeter::paint(juce::Graphics& g)
 {
 	auto bounds = getLocalBounds().toFloat();
