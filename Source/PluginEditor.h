@@ -3,70 +3,59 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
-// Ya no heredamos de Slider::Listener
 class BasicCompressorAudioProcessorEditor : public juce::AudioProcessorEditor,
-	public juce::Timer
+    public juce::Slider::Listener,
+    public juce::Timer
 {
 public:
-	BasicCompressorAudioProcessorEditor(BasicCompressorAudioProcessor& p);
-	~BasicCompressorAudioProcessorEditor() noexcept override;
+    BasicCompressorAudioProcessorEditor(BasicCompressorAudioProcessor&);
+    ~BasicCompressorAudioProcessorEditor() override;
 
-	void paint(juce::Graphics&) override;
-	void resized() override;
-	void timerCallback() override;
+    void paint(juce::Graphics&) override;
+    void resized() override;
+
+    // Funciones requeridas por Listener y Timer
+    void sliderValueChanged(juce::Slider* slider) override;
+    void timerCallback() override;
 
 private:
-	BasicCompressorAudioProcessor& audioProcessor;
+    BasicCompressorAudioProcessor& audioProcessor;
 
-	juce::Slider gainSlider;
-	juce::Label thresholdLabel, ratioLabel, attackLabel, releaseLabel;
-	juce::Slider thresholdSlider, ratioSlider, attackSlider, releaseSlider;
+    // Declaración de los sliders y etiquetas
+    juce::Slider gainSlider;
+    juce::Slider thresholdSlider, ratioSlider, attackSlider, releaseSlider;
+    juce::Label thresholdLabel, ratioLabel, attackLabel, releaseLabel;
 
-	// Adjuntos (Attachments) que conectan la UI con el APVTS automáticamente
-	using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
-	std::unique_ptr<SliderAttachment> gainAttach, threshAttach, ratioAttach, attAttach, relAttach;
+    // Clase interna para la gráfica del compresor
+    class CompressorDisplay : public juce::Component
+    {
+    public:
+        void paint(juce::Graphics& g) override;
+        void setParameters(float thresh, float r) { threshold = thresh; ratio = r; repaint(); }
+    private:
+        float threshold = -20.0f;
+        float ratio = 2.0f;
+        float compressorTransferFunction(float inputDb)
+        {
+            if (inputDb < threshold) return inputDb;
+            return threshold + (inputDb - threshold) / ratio;
+        }
+    };
 
-	class CompressorDisplay : public juce::Component
-	{
-	public:
-		CompressorDisplay() : threshold(-20.0f), ratio(2.0f) {}
+    // Clase interna para los vúmetros
+    class LevelMeter : public juce::Component
+    {
+    public:
+        void paint(juce::Graphics& g) override;
+        void setLevel(float newLevelDb) { levelDb = newLevelDb; repaint(); }
+    private:
+        float levelDb = -60.0f;
+    };
 
-		void setParameters(float newThreshold, float newRatio)
-		{
-			threshold = newThreshold;
-			ratio = newRatio;
-			repaint();
-		}
-		void paint(juce::Graphics& g) override;
+    // Instancias de nuestras clases visuales
+    CompressorDisplay compressorDisplay;
+    LevelMeter inputLevelMeter;
+    LevelMeter outputLevelMeter;
 
-	private:
-		float threshold, ratio;
-		float compressorTransferFunction(float inputDb)
-		{
-			if (inputDb < threshold) return inputDb;
-			return threshold + (inputDb - threshold) / ratio;
-		}
-	};
-
-	CompressorDisplay compressorDisplay;
-
-	class LevelMeter : public juce::Component
-	{
-	public:
-		LevelMeter() : levelDb(-100.0f) {}
-		void setLevel(float newLevelDb)
-		{
-			levelDb = newLevelDb;
-			repaint();
-		}
-		void paint(juce::Graphics& g) override;
-
-	private:
-		float levelDb;
-	};
-
-	LevelMeter inputLevelMeter;
-	LevelMeter outputLevelMeter;
-
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BasicCompressorAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BasicCompressorAudioProcessorEditor)
 };
