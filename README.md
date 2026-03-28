@@ -1,37 +1,38 @@
 # 🎛️ BasicCompressor
 
-Un plugin de compresor de audio básico desarrollado en C++ utilizando el framework JUCE. Este procesador reduce el rango dinámico de la señal de audio entrante basándose en los parámetros estándar de compresión dinámica.
-
+A basic audio compressor plugin developed in C++ using the JUCE framework. This processor reduces the dynamic range of the incoming audio signal based on standard dynamic compression parameters.
+<p align="center">
   <img src="https://github.com/user-attachments/assets/d2e501cd-50b5-4d1d-9035-aaf207ea4c1c" width="600">
+</p>
 
-## 🎚️ Características y Controles
+## 🎚️ Features and Controls
 
-El plugin expone los siguientes parámetros de control:
+The plugin exposes the following control parameters:
 
-* **Gain:** Ajusta la ganancia general de la señal de audio (rango de -50 dB a +10 dB).
-* **Threshold:** Establece el umbral en decibelios a partir del cual el compresor empieza a atenuar la señal (rango de -60 dB a 0 dB).
-* **Ratio:** Determina la proporción de reducción de ganancia que se aplica una vez que la señal supera el umbral (rango de 1.0 a 10.0).
-* **Attack:** El tiempo en milisegundos que tarda el compresor en aplicar la reducción de ganancia (rango de 0.1 ms a 100 ms).
-* **Release:** El tiempo en milisegundos que tarda el compresor en dejar de actuar cuando la señal cae por debajo del umbral (rango de 10 ms a 500 ms).
+* **Gain:** Adjusts the overall gain of the audio signal (range from -50 dB to +10 dB).
+* **Threshold:** Sets the level in decibels above which the compressor begins to attenuate the signal (range from -60 dB to 0 dB).
+* **Ratio:** Determines the amount of gain reduction applied once the signal exceeds the threshold (range from 1.0 to 10.0).
+* **Attack:** The time in milliseconds it takes for the compressor to apply gain reduction (range from 0.1 ms to 100 ms).
+* **Release:** The time in milliseconds it takes for the compressor to stop acting once the signal falls below the threshold (range from 10 ms to 500 ms).
 
-## 🖥️ Interfaz Gráfica (GUI)
+## 🖥️ Graphical User Interface (GUI)
 
-La interfaz incluye elementos de monitorización visual:
+The interface includes visual monitoring elements:
 
-* **Curva de Transferencia:** Una gráfica estática que se actualiza para reflejar la curva de compresión resultante de los parámetros *Threshold* y *Ratio*.
-* **Vúmetros de Nivel:** Dos medidores (Input y Output) que muestran los niveles de la señal en tiempo real, calibrados de -60 dB a 0 dB.
+* **Transfer Curve:** A static graph that updates to reflect the compression curve resulting from the *Threshold* and *Ratio* parameters.
+* **Level Meters:** Two meters (Input and Output) that display real-time signal levels, calibrated from -60 dB to 0 dB.
 
-## 🛠️ Tecnologías
+## 🛠️ Technologies
 
 * C++
 * [JUCE Framework](https://juce.com/)
 
-## 🚀 Cómo compilar
+## 🚀 How to Build
 
-Para compilar este proyecto en Windows:
+To compile this project on Windows:
 
-1. Asegúrate de tener instalado **JUCE** y **Visual Studio** (2019 o 2022) con las herramientas de desarrollo de escritorio en C++.
-2. Abre el archivo `.jucer` del proyecto utilizando la aplicación **Projucer**.
-3. Haz clic en el icono de Visual Studio en Projucer ("Save and Open in IDE") para generar los archivos de la solución.
-4. En Visual Studio, selecciona la configuración que necesites (`Debug` o `Release`) y compila el proyecto (`Build > Build Solution`).
-5. Encontrarás el plugin compilado (típicamente en formato VST3 o Standalone) dentro de la carpeta `Builds/VisualStudio...` en el directorio de tu proyecto.
+1. Make sure you have **JUCE** and **Visual Studio** (2019 or 2022) installed with C++ desktop development tools.
+2. Open the `.jucer` project file using the **Projucer** application.
+3. Click the Visual Studio icon in Projucer ("Save and Open in IDE") to generate the solution files.
+4. In Visual Studio, select the configuration you need (`Debug` or `Release`) and build the project (`Build > Build Solution`).
+5. You will find the compiled plugin (typically in VST3 or Standalone format) inside the `Builds/VisualStudio...` folder within your project directory.
