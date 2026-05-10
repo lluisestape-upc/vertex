@@ -1,8 +1,8 @@
-# 🎛️ BasicCompressor
+# Vertex
 
-A basic audio compressor plugin developed in C++ using the JUCE framework. This processor reduces the dynamic range of the incoming audio signal based on standard dynamic compression parameters.
+A VST3 audio compressor plugin developed in C++ using the JUCE framework. This processor reduces the dynamic range of the incoming audio signal based on standard dynamic compression parameters.
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/d2e501cd-50b5-4d1d-9035-aaf207ea4c1c" width="600">
+  <img src="assets/vertex_screenshot.png" width="600">
 </p>
 
 ## 🎚️ Features and Controls
