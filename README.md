@@ -36,3 +36,12 @@ To compile this project on Windows:
 3. Click the Visual Studio icon in Projucer ("Save and Open in IDE") to generate the solution files.
 4. In Visual Studio, select the configuration you need (`Debug` or `Release`) and build the project (`Build > Build Solution`).
 5. You will find the compiled plugin (typically in VST3 or Standalone format) inside the `Builds/VisualStudio...` folder within your project directory.
+---
+
+## 🔗 Download & more plugins
+
+This plugin is part of the **ESP free plugin collection**.
+Download it and find more free audio plugins at:
+
+👉 **[esp-plugin-store.vercel.app](https://esp-plugin-store.vercel.app)**
+
