@@ -18,10 +18,21 @@ The plugin exposes the following control parameters:
 
 ## Graphical User Interface (GUI)
 
-The interface includes visual monitoring elements:
+The interface uses a Polar design language: white minimalist panels, a subtle
+coordinate-grid reticle in the background, and electric-blue accents.
 
-- **Transfer Curve:** A static graph that updates to reflect the compression curve resulting from the *Threshold* and *Ratio* parameters.
-- **Level Meters:** Two meters (Input and Output) that display real-time signal levels, calibrated from -60 dB to 0 dB.
+**Controls**
+
+- **Rotary knobs:** white cap with a soft drop shadow, an outer frame circle, a
+  25-tick scale with major marks every quarter turn, a hairline blue progress
+  arc, and a thin pin with a ringed dot as the indicator.
+
+**Visual monitoring**
+
+- **Transfer Curve:** a live graph that redraws to reflect the compression curve
+  produced by the *Threshold* and *Ratio* settings.
+- **Level Meters:** two meters (Input and Output) showing real-time signal
+  levels, calibrated from -60 dB to 0 dB.
 
 ## Technologies
 
